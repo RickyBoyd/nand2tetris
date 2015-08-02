@@ -1,0 +1,11 @@
+(LOOP)
+	@8
+	M=A
+	D=M
+	@LOOP
+	0;JMP
+(BLACK)
+	@6
+	M=!D
+	@BLACK
+	D;JEQ
