@@ -14,8 +14,11 @@ def dest(input):
 		return "101"
 	elif dest == "AD":
 		return "110"
-	else:
+	elif dest == "AMD":
 		return "111"
+	else:
+		print "Non legal destination"
+		return "DEST_ERROR"
 
 def comp(input):
 	#comp = ''.join(filter(lambda c: c in string.printable, comp))
@@ -76,6 +79,9 @@ def comp(input):
 		return "0000000"
 	elif comp == "D|A":
 		return "0010101"
+	else:
+		print "Non legal computation"
+		return "COMP_ERROR"
 
 def jump(jump):
 
@@ -93,6 +99,10 @@ def jump(jump):
 		return "110"
 	elif jump =="JMP":
 		return "111"
+	else:
+		print "Non-legal jump code"
+		return "JMP_ERROR"
+
 def main():
 	file_name = sys.argv[1]
 	for path, dirs, files in os.walk('.'):
@@ -134,7 +144,7 @@ def main():
 			line = line.replace('(', '')
 			labels[line] = str(index)
 			content.pop(i)
-			i=0
+			i-=1
 		i += 1
 
 	next_free_address = "16"
