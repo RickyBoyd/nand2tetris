@@ -134,7 +134,7 @@ def main():
 			line = line.replace('(', '')
 			labels[line] = str(index)
 			content.pop(i)
-			i=0
+			i-=1
 		i += 1
 
 	next_free_address = "16"
