@@ -147,15 +147,15 @@ def main():
 			i-=1
 		i += 1
 
-	next_free_address = "16"
+	next_free_address = 16
 
 	for line in content:
 		if '@' in line:
 			line = line.replace("@", "")
 			if not line[0].isdigit(): #if first char of an a-command is not a number then it is a symbol
 				if line not in labels:
-					labels[line] = next_free_address
-					next_free_address = str(int(next_free_address)+1)
+					labels[line] = str(next_free_address)
+					next_free_address += 1
 
 
 	e = 1
