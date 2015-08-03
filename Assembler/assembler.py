@@ -148,6 +148,7 @@ def main():
 			i-=1
 		i += 1
 
+
 	next_free_address = 16
 
 	f = open(newFileName, 'w')
