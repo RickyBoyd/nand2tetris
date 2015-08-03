@@ -1,5 +1,9 @@
 import sys, string, os
 
+#Run in command line with python assembler.py file_name.asm
+#Assembly file can be in the current working directory or a directory below the current working directory.
+#The program will output a file_name.hack in the same directory as the assembly file
+
 def dest(input):
 	dest = input[0]
 	if dest == "D":
@@ -21,7 +25,6 @@ def dest(input):
 		return "DEST_ERROR"
 
 def comp(input):
-	#comp = ''.join(filter(lambda c: c in string.printable, comp))
 	comp = input[0]
 	if comp == "M":
 		return "1110000"
@@ -84,7 +87,7 @@ def comp(input):
 		return "COMP_ERROR"
 
 def jump(jump):
-
+	print jump
 	if jump == "JGT":
 		return "001"
 	elif jump =="JEQ":
@@ -109,7 +112,7 @@ def main():
 		if file_name in files:
 			os.chdir(path)
 			break
-
+	
 	with open(file_name) as f:
 		content = f.readlines()
 	f.close()
