@@ -158,7 +158,6 @@ def main():
 					next_free_address += 1
 
 
-	e = 1
 	f = open(newFileName, 'w')
 	#print content
 	for line in content:
@@ -187,7 +186,6 @@ def main():
 				elif len(line) == 3:
 					jump_binary = jump(line[2])
 				instruction = instruction+comp_binary+dest_binary+jump_binary
-		e = e+1
 		f.write(instruction+"\n")
 	f.close()
 main()
