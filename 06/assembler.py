@@ -149,20 +149,15 @@ def main():
 
 	next_free_address = 16
 
-	for line in content:
-		if '@' in line:
-			line = line.replace("@", "")
-			if not line[0].isdigit(): #if first char of an a-command is not a number then it is a symbol
-				if line not in labels:
-					labels[line] = str(next_free_address)
-					next_free_address += 1
-
-
 	f = open(newFileName, 'w')
 	#print content
 	for line in content:
 		if "@" in line: #A-COMMAND
 			line = line.replace("@", "")
+			if not line[0].isdigit(): #if first char of an a-command is not a number then it is a symbol
+				if line not in labels:
+					labels[line] = str(next_free_address)
+					next_free_address += 1
 			if line[0].isdigit():
 				instruction = '{0:016b}'.format(int(line))
 			elif labels.get(line) != None:
