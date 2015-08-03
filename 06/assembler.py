@@ -136,6 +136,7 @@ def main():
 
 	i=0
 	
+	#Pass 1 adds new labels of the form (XXXX) to the labels dict and removes them from the assembly
 	while i < len(content):
 		line = content[i]
 		if '(' in line:
@@ -150,11 +151,12 @@ def main():
 	next_free_address = 16
 
 	f = open(newFileName, 'w')
-	#print content
+	
+	#Pass 2 generates code and handles variable symbols
 	for line in content:
 		if "@" in line: #A-COMMAND
 			line = line.replace("@", "")
-			if not line[0].isdigit(): #if first char of an a-command is not a number then it is a symbol
+			if not line[0].isdigit(): 
 				if line not in labels:
 					labels[line] = str(next_free_address)
 					next_free_address += 1
@@ -183,4 +185,7 @@ def main():
 				instruction = instruction+comp_binary+dest_binary+jump_binary
 		f.write(instruction+"\n")
 	f.close()
+
+
 main()
+
