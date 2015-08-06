@@ -26,14 +26,37 @@ def constant(i):
 	constant_asm = "@"+number+"\nD=A\n"
 
 def add_routine():
-	add_asm = "@SP\nM=M-1\nA=M\nD=M\nA=A-1\nM=M+D\n"
-	return
+	return "@SP\nAM=M-1\nD=M\nA=A-1\nM=M+D\n"
 
-def newFileName(file_name):
-	return file_name.replace(".vm", "") + ".asm"
+def sub_routine():
+	return "@SP\nAM=M-1\nD=M\nA=A-1\nM=M-D\n"
+
+def neg_routine():
+	return "@SP\nA=M-1\nM=-M\n"
+
+def neg_routine():
+	return "@SP\nA=M-1\nM=!M\n"
+
+def and_routine():
+	return "@SP\nAM=M-1\nD=M\nA=A-1\nM=M&D\n"
+
+def or_routine():
+	return "@SP\nAM=M-1\nD=M\nA=A-1\nM=M|D\n"
+
+def eq_routine():
+	return "@SP\nAM=M-1\nD=M\nA=A-1\nD=M-D\n@EQUALS\nD;JEQ\n(NOTEQUALS)\n@SP\nA=A-1\nM=0\n@END\n0;JMP(EQUALS)\n@SP\nA=A-1\nM=-1\n(END)\n"
 
 def initialise():
 	initialise_asm = "@SP\nM=256"
+
+def generateAssembly(parsed_vm_code):
+	print "hello"
+
+def translate(content):
+	return generateAssembly(parse(content))
+
+def newFileName(file_name):
+	return file_name.replace(".vm", "") + ".asm"
 
 def main():
 	file_name = sys.argv[1]
