@@ -18,12 +18,18 @@ def pop(args):
 	pop_asm = "@SP\nM=M-1\nA=M\nD=M\n"
 
 def push(args):
+	push_asm = ""
+	if args[0] == "constant":
+		push_asm = push_asm + constant(args[1])
+
 	#push whatever is in D
-	push_asm = "@SP\nM=M+1\nA=M\nM=D\n"
+	push_asm = push_asm + "@SP\nM=M+1\nA=M-1\nM=D\n"
+	return push_asm
 
 def constant(i):
 	number = str(i)
 	constant_asm = "@"+number+"\nD=A\n"
+	return constant_asm
 
 def add_routine():
 	return "@SP\nAM=M-1\nD=M\nA=A-1\nM=M+D\n"
@@ -34,7 +40,7 @@ def sub_routine():
 def neg_routine():
 	return "@SP\nA=M-1\nM=-M\n"
 
-def neg_routine():
+def not_routine():
 	return "@SP\nA=M-1\nM=!M\n"
 
 def and_routine():
@@ -43,14 +49,57 @@ def and_routine():
 def or_routine():
 	return "@SP\nAM=M-1\nD=M\nA=A-1\nM=M|D\n"
 
-def eq_routine():
-	return "@SP\nAM=M-1\nD=M\nA=A-1\nD=M-D\n@EQUALS\nD;JEQ\n(NOTEQUALS)\n@SP\nA=A-1\nM=0\n@END\n0;JMP(EQUALS)\n@SP\nA=A-1\nM=-1\n(END)\n"
+### IDEA
+### Make it so that the eq lt and gt routines are written only once and can be reused
+###
+def eq_routine(call_number):
+	number = str(call_number)
+	return "@SP\nAM=M-1\nD=M\nA=A-1\nD=M-D\n@EQUALS"+number+"\nD;JEQ\n@SP\nA=M-1\nM=0\n@END"+number+"\n0;JMP\n(EQUALS"+number+")\n@SP\nA=M-1\nM=-1\n(END"+number+")\n"
+
+def lt_routine(call_number):
+	number = str(call_number)
+	assembly = "@SP\nAM=M-1\nD=M\nA=A-1\nD=M-D\n@LT"+number+"\nD;JLT\n@SP\nA=M-1\nM=0\n@END"+number+"\n0;JMP\n(LT"+number+")\n@SP\nA=M-1\nM=-1\n(END"+number+")\n"
+	return assembly
+def gt_routine(call_number):
+	number = str(call_number)
+	assembly = "@SP\nAM=M-1\nD=M\nA=A-1\nD=M-D\n@GT"+number+"\nD;JGT\n@SP\nA=M-1\nM=0\n@END"+number+"\n0;JMP\n(GT"+number+")\n@SP\nA=M-1\nM=-1\n(END"+number+")\n"
+	return assembly
+
+def stack_arithemtic(operation, call_number):
+	if operation == "add":
+		return add_routine()
+	elif operation == "sub":
+		return sub_routine()
+	elif operation == "neg":
+		return neg_routine()
+	elif operation == "not":
+		return not_routine()
+	elif operation == "and":
+		return and_routine()
+	elif operation == "or":
+		return or_routine()
+	elif operation == "eq":
+		return eq_routine(call_number)
+	elif operation == "lt":
+		return lt_routine(call_number)
+	elif operation == "gt":
+		return gt_routine(call_number)
+	else:
+		print '"'+line[0]+'"' + " is not a known operation."
 
 def initialise():
 	initialise_asm = "@SP\nM=256"
 
 def generateAssembly(parsed_vm_code):
-	print "hello"
+	assembly = ""
+	call_number = "0" #needed so that each label for every comparison operation is unique
+	for line in parsed_vm_code:
+		if len(line) == 3 and line[0] == "push":
+			assembly = assembly + push(line[1:3])
+		if len(line) == 1:
+			assembly = assembly + stack_arithemtic(line[0], call_number)
+			call_number = str(int(call_number)+1)
+	return assembly
 
 def translate(content):
 	return generateAssembly(parse(content))
@@ -69,14 +118,12 @@ def main():
 				with open(file_name) as f:
 					content = f.readlines()
 				f.close()
-				print parse(content)
-				#print content
-				#TO BE IMPLEMENTED
-				#assembly = translate(content)
-				#f = open(new_file_name, "w")
-				#for line in assembly:
-				#	f.write(line)
-				#f.close()
+				print translate(content)
+				assembly = translate(content)
+				f = open(new_file_name, "w")
+				for line in assembly:
+					f.write(line)
+				f.close()
 				break
 	elif not '.' in file_name: #Dealing with a directory
 		for path, dirs, files in os.walk("./"+file_name):
